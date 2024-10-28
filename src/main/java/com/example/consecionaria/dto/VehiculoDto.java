@@ -1,10 +1,11 @@
-package com.example.demo.dto;
+package com.example.consecionaria.dto;
 
 import java.util.List;
 import lombok.Data;
 
 @Data
 public class VehiculoDto {
+	
     private int idVehiculo;
     private String modelo;
     private int stock;
@@ -35,7 +36,7 @@ public class VehiculoDto {
         this.modelo = modelo;
         this.stock = stock;
         this.precio = precio;
-        this.sucursal = new SucursalDto(idsucursal, null); // Creando un SucursalDto con solo idsucursal
+        this.sucursal = new SucursalDto(idsucursal, null, null); // Creando un SucursalDto con solo idsucursal
         this.mostrarVehiculo = mostrarVehiculo;
         this.imagenes = imagenes;
     }

@@ -9,9 +9,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @SpringBootApplication
-@EnableJpaRepositories("com.example.demo.repository")
-@EntityScan("com.example.demo.entity")
-@ComponentScan("com.example.demo.*")
+@EnableJpaRepositories("com.example.consecionaria.repository")
+@EntityScan("com.example.consecionaria.entity")
+@ComponentScan("com.example.consecionaria.*")
 @EnableWebMvc
 public class DemoApplication {
 

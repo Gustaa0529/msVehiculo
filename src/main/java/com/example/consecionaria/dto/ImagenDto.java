@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.example.consecionaria.dto;
 
 import java.util.Base64;
 
@@ -12,17 +12,17 @@ import lombok.Setter;
 public class ImagenDto {
 	
     private String nombre;
-    private String contenido; 
+    private String ruta;
     private int idVehiculo; 
 
     public ImagenDto() {
         super();
     }
 
-    public ImagenDto(String nombre, byte[] contenido, int idVehiculo) {
+    public ImagenDto(String nombre, String ruta, int idVehiculo) {
         super();
         this.nombre = nombre;
-        this.contenido = Base64.getEncoder().encodeToString(contenido);
+        this.ruta = ruta;
         this.idVehiculo = idVehiculo;
     }
 

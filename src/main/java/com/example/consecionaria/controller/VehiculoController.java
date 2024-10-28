@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.consecionaria.controller;
 
 import java.util.List;
 
@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.PaginadoDto;
-import com.example.demo.dto.VehiculoDto;
-import com.example.demo.entity.Vehiculo;
-import com.example.demo.service.VehiculoService;
+import com.example.consecionaria.dto.PaginadoDto;
+import com.example.consecionaria.dto.VehiculoDto;
+import com.example.consecionaria.entity.Vehiculo;
+import com.example.consecionaria.service.VehiculoService;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -36,9 +36,9 @@ public class VehiculoController {
 	public ResponseEntity<PaginadoDto<VehiculoDto>> listarConPaginado(
 	        @RequestParam Integer size,
 	        @RequestParam String sort,
-	        @RequestParam Integer numPage) throws Exception {
-
-	    Page<VehiculoDto> pageResult = vehiculoService.listarConPaginadoV2(size, sort, numPage);
+	        @RequestParam Integer numPage,
+	        @RequestParam int idSucursal) throws Exception {
+	    Page<VehiculoDto> pageResult = vehiculoService.listarConPaginado(size, sort, numPage, idSucursal);
 	    PaginadoDto<VehiculoDto> response = new PaginadoDto<>(
 	            pageResult.getContent(),
 	            pageResult.getTotalElements(),
@@ -46,8 +46,8 @@ public class VehiculoController {
 	            pageResult.getSize(),
 	            pageResult.getNumber()
 	    );
-
 	    return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+
 
 }
