@@ -1,8 +1,6 @@
 package com.example.consecionaria.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,11 +44,10 @@ public class VehiculoServiceImp implements VehiculoService{
                    .collect(Collectors.toList());
            dto.setImagenes(imagenDtos);
        }
-
        return dto;
    }
 
-   public Page<VehiculoDto> listarConPaginado(Integer size, String sort, Integer numPage, int idSucursal) throws Exception {
+   public Page<VehiculoDto> listarConPaginadoPorSucursal(Integer size, String sort, Integer numPage, int idSucursal) throws Exception {
        if (size <= 0) {
            throw new IllegalArgumentException("El tamaño de la página debe ser mayor que cero.");
        }

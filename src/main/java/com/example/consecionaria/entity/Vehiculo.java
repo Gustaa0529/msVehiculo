@@ -19,7 +19,6 @@ public class Vehiculo {
     private String modelo;
     private int stock;
     private int precio;
-    private boolean mostrarVehiculo;
 
     @ManyToOne
     @JoinColumn(name = "id_sucursal") // Clave foránea a la tabla sucursal
@@ -32,24 +31,22 @@ public class Vehiculo {
         super();
     }
 
-    public Vehiculo(String modelo, int stock, int precio, Sucursal sucursal, boolean mostrarVehiculo, List<Imagen> imagenes) {
+    public Vehiculo(String modelo, int stock, int precio, Sucursal sucursal, List<Imagen> imagenes) {
         super();
         this.modelo = modelo;
         this.stock = stock;
         this.precio = precio;
         this.sucursal = sucursal;
-        this.mostrarVehiculo = mostrarVehiculo;
         this.imagenes = imagenes;
     }
 
-    public Vehiculo(int idVehiculo, String modelo, int stock, int precio, Sucursal sucursal, boolean mostrarVehiculo, List<Imagen> imagenes) {
+    public Vehiculo(int idVehiculo, String modelo, int stock, int precio, Sucursal sucursal, List<Imagen> imagenes) {
         super();
         this.idVehiculo = idVehiculo;
         this.modelo = modelo;
         this.stock = stock;
         this.precio = precio;
         this.sucursal = sucursal;
-        this.mostrarVehiculo = mostrarVehiculo;
         this.imagenes = imagenes;
     }
 }

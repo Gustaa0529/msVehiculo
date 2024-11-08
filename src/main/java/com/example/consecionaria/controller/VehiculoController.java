@@ -38,7 +38,7 @@ public class VehiculoController {
 	        @RequestParam String sort,
 	        @RequestParam Integer numPage,
 	        @RequestParam int idSucursal) throws Exception {
-	    Page<VehiculoDto> pageResult = vehiculoService.listarConPaginado(size, sort, numPage, idSucursal);
+	    Page<VehiculoDto> pageResult = vehiculoService.listarConPaginadoPorSucursal(size, sort, numPage, idSucursal);
 	    PaginadoDto<VehiculoDto> response = new PaginadoDto<>(
 	            pageResult.getContent(),
 	            pageResult.getTotalElements(),

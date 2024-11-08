@@ -11,6 +11,6 @@ public interface VehiculoService {
 
 	/*public List<Vehiculo> listar() throws Exception;*/
 	
-	public Page<VehiculoDto> listarConPaginado(Integer size, String sort, Integer numPage, int idSucursal) throws Exception;
+	public Page<VehiculoDto> listarConPaginadoPorSucursal(Integer size, String sort, Integer numPage, int idSucursal) throws Exception;
 
 }
