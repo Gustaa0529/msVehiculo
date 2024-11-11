@@ -15,14 +15,12 @@ public class SucursalDto {
 	
 	    private int idSucursal;
 	    private String direccion;
-	    private List<Vehiculo> vehiculos;
 	    
 	    public SucursalDto() {}
 
-	    public SucursalDto(int idSucursal, String direccion, List<Vehiculo> vehiculos) {
+	    public SucursalDto(int idSucursal, String direccion) {
 	        this.idSucursal = idSucursal;
 	        this.direccion = direccion;
-	        this.vehiculos = vehiculos;
 	    }
 	    
 }

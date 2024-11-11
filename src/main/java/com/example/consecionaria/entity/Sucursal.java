@@ -24,5 +24,13 @@ public class Sucursal {
 
     @OneToMany(mappedBy = "sucursal")
     private List<Vehiculo> vehiculos;
+    
+    public Sucursal() { 
+    	super(); 
+    }
+    public Sucursal(int idSucursal) { 
+    	super(); 
+    	this.idSucursal = idSucursal; 
+    }
 
 }
