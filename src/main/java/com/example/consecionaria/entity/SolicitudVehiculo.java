@@ -1,11 +1,16 @@
 package com.example.consecionaria.entity;
 
-
+import com.example.consecionaria.dto.EstadoEnum;
+import com.example.consecionaria.dto.SolicitudVehiculoDto;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -18,18 +23,24 @@ public class SolicitudVehiculo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idSolicitud; 
 
-    private int idVehiculo;
-    private int idSucursalDestino;
-    private int idEmpleado;
-    private String estado; 
+    @ManyToOne
+    @JoinColumn(name = "idVehiculo") 
+    private Vehiculo vehiculo;
     
-    public SolicitudVehiculo() { }
-
-    public SolicitudVehiculo(int idVehiculo, int idSucursalDestino, int idEmpleado, String estado) {
-        this.idVehiculo = idVehiculo;
-        this.idSucursalDestino = idSucursalDestino;
-        this.idEmpleado = idEmpleado;
-        this.estado = estado;
+    @ManyToOne
+    @JoinColumn(name = "idSucursalDestino") 
+    private Sucursal sucursal;
+    
+    @Enumerated(EnumType.STRING)
+    private EstadoEnum estado; 
+    
+    public SolicitudVehiculoDto toDto() {
+        SolicitudVehiculoDto dto = new SolicitudVehiculoDto();
+        dto.setIdSolicitud(this.getIdSolicitud());
+        dto.setVehiculoDto(this.getVehiculo().toDto());
+        dto.setSucursal(this.getSucursal().toDto());
+        dto.setEstado(this.getEstado());
+        return dto;
     }
 }
 

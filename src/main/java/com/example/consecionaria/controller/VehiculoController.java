@@ -1,13 +1,12 @@
 package com.example.consecionaria.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.consecionaria.dto.EstadoEnum;
 import com.example.consecionaria.dto.PaginadoDto;
+import com.example.consecionaria.dto.SolicitudVehiculoDto;
 import com.example.consecionaria.dto.VehiculoDto;
-import com.example.consecionaria.entity.Vehiculo;
+import com.example.consecionaria.entity.SolicitudVehiculo;
 import com.example.consecionaria.service.VehiculoService;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -64,6 +65,46 @@ public class VehiculoController {
 				);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+	
+	 @PostMapping("/guardarSoli")
+	    public ResponseEntity<SolicitudVehiculo> guardarSolicitud(@RequestBody SolicitudVehiculoDto solicitudVehiculoDto) {
+	        SolicitudVehiculo solicitudVehiculo = vehiculoService.guardarSolicitud(solicitudVehiculoDto);
+	        return new ResponseEntity<>(solicitudVehiculo, HttpStatus.CREATED);
+	  }
+
+	 @GetMapping("/listarSoli")
+	 public ResponseEntity<Page<SolicitudVehiculoDto>> listarSolicitudesPaginado(
+	            @RequestParam Integer size,
+	            @RequestParam String sort,
+	            @RequestParam Integer numPage,
+	            @RequestParam int idSucursal) throws Exception {
+	        Page<SolicitudVehiculoDto> solicitudes = vehiculoService.listarSolicitudesPaginado(size, sort, numPage, idSucursal);
+	        return new ResponseEntity<>(solicitudes, HttpStatus.OK);
+	    }
+	 
+	 @DeleteMapping("/eliminarSoli/{id}")
+	 public ResponseEntity<Void> eliminarSolicitud(@PathVariable int id) {
+	     try {
+	         vehiculoService.eliminarSolicitud(id);
+	         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	     } catch (Exception e) {
+	         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	     }
+	 }
+	 
+	 @PutMapping("/actualizarEstadoSoli/{id}")
+	 public ResponseEntity<SolicitudVehiculoDto> actualizarEstadoSolicitud(
+	         @PathVariable int id, @RequestParam EstadoEnum nuevoEstado) {
+	     try {
+	         SolicitudVehiculoDto solicitudActualizada = vehiculoService.actualizarEstadoSolicitud(id, nuevoEstado);
+	         return new ResponseEntity<>(solicitudActualizada, HttpStatus.OK);
+	     } catch (Exception e) {
+	         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	     }
+	 }
+
+	 
+
 
 
 }

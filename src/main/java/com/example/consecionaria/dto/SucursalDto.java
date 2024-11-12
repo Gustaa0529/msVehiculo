@@ -2,6 +2,7 @@ package com.example.consecionaria.dto;
 
 import java.util.List;
 
+import com.example.consecionaria.entity.Sucursal;
 import com.example.consecionaria.entity.Vehiculo;
 
 import lombok.Data;
@@ -23,4 +24,11 @@ public class SucursalDto {
 	        this.direccion = direccion;
 	    }
 	    
+	    public Sucursal toEntity() {
+	        Sucursal sucursal = new Sucursal();
+	        sucursal.setIdSucursal(this.idSucursal);
+	        sucursal.setDireccion(this.direccion);
+	        return sucursal;
+	    }
+	   
 }

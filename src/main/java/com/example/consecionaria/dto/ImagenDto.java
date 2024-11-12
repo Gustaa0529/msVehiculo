@@ -2,6 +2,8 @@ package com.example.consecionaria.dto;
 
 import java.util.Base64;
 
+import com.example.consecionaria.entity.Imagen;
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,5 +27,13 @@ public class ImagenDto {
         this.ruta = ruta;
         this.idVehiculo = idVehiculo;
     }
+   
+    public Imagen toEntity() {
+        Imagen imagen = new Imagen();
+        imagen.setNombre(this.nombre);
+        imagen.setRuta(this.ruta);
+        return imagen;
+    }
+  
 
 }

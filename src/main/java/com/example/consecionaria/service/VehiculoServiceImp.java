@@ -11,19 +11,26 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.example.consecionaria.dto.EstadoEnum;
 import com.example.consecionaria.dto.ImagenDto;
+import com.example.consecionaria.dto.SolicitudVehiculoDto;
 import com.example.consecionaria.dto.SucursalDto;
 import com.example.consecionaria.dto.VehiculoDto;
 import com.example.consecionaria.entity.Imagen;
+import com.example.consecionaria.entity.SolicitudVehiculo;
 import com.example.consecionaria.entity.Sucursal;
 import com.example.consecionaria.entity.Vehiculo;
 import com.example.consecionaria.repository.VehiculoRepository;
+import com.example.consecionaria.repository.VehiculoSolicitadoRepository;
 
 @Service
 public class VehiculoServiceImp implements VehiculoService{
 
 	@Autowired
 	private VehiculoRepository vehiculoRepository;
+	
+	@Autowired
+	private VehiculoSolicitadoRepository vehiculoSolicitadoRepository;
 
 	private VehiculoDto convertToDto(Vehiculo vehiculo) {
 		VehiculoDto dto = new VehiculoDto();
@@ -48,6 +55,19 @@ public class VehiculoServiceImp implements VehiculoService{
 		}
 		return dto;
 	}
+	
+	private SolicitudVehiculoDto convertToSolicitudVehiculoDto(SolicitudVehiculo solicitudVehiculo) {
+        SolicitudVehiculoDto dto = new SolicitudVehiculoDto();
+        dto.setIdSolicitud(solicitudVehiculo.getIdSolicitud());
+        dto.setVehiculoDto(convertToDto(solicitudVehiculo.getVehiculo()));
+        SucursalDto sucursalDto = new SucursalDto(
+            solicitudVehiculo.getSucursal().getIdSucursal(),
+            solicitudVehiculo.getSucursal().getDireccion()
+        );
+        dto.setSucursal(sucursalDto);
+        dto.setEstado(solicitudVehiculo.getEstado());
+        return dto;
+    }
 
 	public VehiculoDto actualizarPrecio(int id, int nuevoPrecio) throws Exception{ 
 		Optional<Vehiculo> optionalVehiculo = vehiculoRepository.findById(id); 
@@ -128,5 +148,70 @@ public class VehiculoServiceImp implements VehiculoService{
 		});
 		return vehiculo;
 	}*/
+	
+
+	public SolicitudVehiculo guardarSolicitud(SolicitudVehiculoDto solicitudVehiculoDto) {
+        SolicitudVehiculo solicitudVehiculo = new SolicitudVehiculo();
+        solicitudVehiculo.setVehiculo(solicitudVehiculoDto.getVehiculoDto().toEntity());
+        solicitudVehiculo.setSucursal(solicitudVehiculoDto.getSucursal().toEntity());
+        solicitudVehiculo.setEstado(solicitudVehiculoDto.getEstado());
+
+        return vehiculoSolicitadoRepository.save(solicitudVehiculo);
+    }
+
+    public Page<SolicitudVehiculoDto> listarSolicitudesPaginado(Integer size, String sort, Integer numPage, int idSucursal) throws Exception {
+        if (size <= 0) {
+            throw new IllegalArgumentException("El tamaño de la página debe ser mayor que cero.");
+        }
+        if (numPage < 0) {
+            throw new IllegalArgumentException("El número de página no puede ser negativo.");
+        }
+        if (sort == null || sort.trim().isEmpty()) {
+            sort = "idSolicitud";
+        }
+
+        Pageable pagin = PageRequest.of(numPage, size, Sort.by(sort));
+        Page<SolicitudVehiculo> pageResult = vehiculoSolicitadoRepository.findBySucursalIdSucursal(idSucursal, pagin);
+
+        return pageResult.map(this::convertToSolicitudVehiculoDto);
+    }
+    
+    @Override
+    public void eliminarSolicitud(int id) throws Exception {
+    	vehiculoSolicitadoRepository.deleteById(id);
+    }
+    
+    @Override
+    public SolicitudVehiculoDto actualizarEstadoSolicitud(int id, EstadoEnum nuevoEstado) throws Exception {
+        SolicitudVehiculo solicitud = vehiculoSolicitadoRepository.findById(id)
+                .orElseThrow(() -> new Exception("Solicitud no encontrada"));
+
+        solicitud.setEstado(nuevoEstado);
+
+        if (nuevoEstado == EstadoEnum.VEHICULOENVIADO) {
+            Vehiculo vehiculo = solicitud.getVehiculo();
+            vehiculo.setStock(vehiculo.getStock() - 1);
+            vehiculoRepository.save(vehiculo);
+
+            Vehiculo vehiculoEnOtraSucursal = vehiculoRepository.findByModeloAndSucursalIdSucursal(
+                    vehiculo.getModelo(), solicitud.getSucursal().getIdSucursal());
+
+            if (vehiculoEnOtraSucursal != null) {
+                vehiculoEnOtraSucursal.setStock(vehiculoEnOtraSucursal.getStock() + 1);
+            } else {
+                Vehiculo nuevoVehiculo = new Vehiculo();
+                nuevoVehiculo.setModelo(vehiculo.getModelo());
+                nuevoVehiculo.setStock(1);
+                nuevoVehiculo.setSucursal(solicitud.getSucursal());
+                vehiculoRepository.save(nuevoVehiculo);
+            }
+        }
+
+        vehiculoSolicitadoRepository.save(solicitud);
+        return solicitud.toDto();
+    }
+
+
+
 
 }

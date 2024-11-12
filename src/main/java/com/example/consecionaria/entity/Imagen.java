@@ -1,5 +1,7 @@
 package com.example.consecionaria.entity;
 
+import com.example.consecionaria.dto.ImagenDto;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -31,5 +33,13 @@ public class Imagen {
         this.nombre = nombre;
         this.ruta = ruta;
         this.idVehiculo = idVehiculo;
+    }
+    
+    public ImagenDto toDto() {
+        ImagenDto dto = new ImagenDto();
+        dto.setNombre(this.getNombre());
+        dto.setRuta(this.getRuta());
+        dto.setIdVehiculo(this.getIdVehiculo());
+        return dto;
     }
 }

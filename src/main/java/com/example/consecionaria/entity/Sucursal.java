@@ -2,6 +2,7 @@ package com.example.consecionaria.entity;
 
 import java.util.List;
 
+import com.example.consecionaria.dto.SucursalDto;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,6 +32,13 @@ public class Sucursal {
     public Sucursal(int idSucursal) { 
     	super(); 
     	this.idSucursal = idSucursal; 
+    }
+    
+    public SucursalDto toDto() {
+        SucursalDto dto = new SucursalDto();
+        dto.setIdSucursal(this.getIdSucursal());
+        dto.setDireccion(this.getDireccion());
+        return dto;
     }
 
 }
