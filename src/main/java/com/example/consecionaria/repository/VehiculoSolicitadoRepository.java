@@ -10,6 +10,6 @@ import com.example.consecionaria.entity.SolicitudVehiculo;
 @Repository
 public interface VehiculoSolicitadoRepository extends JpaRepository<SolicitudVehiculo, Integer>{
 	
-	Page<SolicitudVehiculo> findBySucursalIdSucursal(int idSucursal, Pageable pageable);
+	Page<SolicitudVehiculo> findByVehiculoSucursalIdSucursal(int idSucursal, Pageable pageable);
 
 }

@@ -171,7 +171,7 @@ public class VehiculoServiceImp implements VehiculoService{
         }
 
         Pageable pagin = PageRequest.of(numPage, size, Sort.by(sort));
-        Page<SolicitudVehiculo> pageResult = vehiculoSolicitadoRepository.findBySucursalIdSucursal(idSucursal, pagin);
+        Page<SolicitudVehiculo> pageResult = vehiculoSolicitadoRepository.findByVehiculoSucursalIdSucursal(idSucursal, pagin);
 
         return pageResult.map(this::convertToSolicitudVehiculoDto);
     }
@@ -198,11 +198,27 @@ public class VehiculoServiceImp implements VehiculoService{
 
             if (vehiculoEnOtraSucursal != null) {
                 vehiculoEnOtraSucursal.setStock(vehiculoEnOtraSucursal.getStock() + 1);
+                vehiculoRepository.save(vehiculoEnOtraSucursal);
             } else {
                 Vehiculo nuevoVehiculo = new Vehiculo();
                 nuevoVehiculo.setModelo(vehiculo.getModelo());
+                nuevoVehiculo.setPrecio(vehiculo.getPrecio());
                 nuevoVehiculo.setStock(1);
                 nuevoVehiculo.setSucursal(solicitud.getSucursal());
+
+                vehiculoRepository.save(nuevoVehiculo);
+
+                List<Imagen> nuevasImagenes = vehiculo.getImagenes().stream()
+                        .map(imagen -> {
+                            Imagen nuevaImagen = new Imagen();
+                            nuevaImagen.setNombre(imagen.getNombre());
+                            nuevaImagen.setRuta(imagen.getRuta());
+                            nuevaImagen.setVehiculo(nuevoVehiculo); 
+                            return nuevaImagen;
+                        })
+                        .collect(Collectors.toList());
+
+                nuevoVehiculo.setImagenes(nuevasImagenes);
                 vehiculoRepository.save(nuevoVehiculo);
             }
         }
